@@ -33,9 +33,9 @@ public class BookService {
      * @param year year to filter
      * @return list of books published in that year
      */
-    public List<Book> getBooksByYear(int year) {
+    public List<Book> getBooksByYear ( int year ) {
         return getAllBooks().stream()
                 .filter(book -> book.year() == year)
-                .collect( Collectors.toList());
+                .toList ();
     }
 }

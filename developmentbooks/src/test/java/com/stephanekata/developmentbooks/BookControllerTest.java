@@ -26,13 +26,7 @@ public class BookControllerTest {
   /** Test for fetching all books. */
   @Test
   void shouldFindAllBooks() throws Exception {
-    List<Book> books =
-        List.of(
-            new Book("Clean Code", "Robert Martin", 2008),
-            new Book("The Clean Coder", "Robert Martin", 2011),
-            new Book("Clean Architecture", "Robert Martin", 2017),
-            new Book("Test Driven Development by Example", "Kent Beck", 2003),
-            new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004));
+    List<Book> books = bookList();
 
     Mockito.when(bookService.getAllBooks()).thenReturn(books);
 
@@ -45,14 +39,29 @@ public class BookControllerTest {
   /** Test for fetching books by year using query param. */
   @Test
   void shouldFindBooksByYear() throws Exception {
-    List<Book> bookByYear = List.of(new Book("The Clean Coder", "Robert Martin", 2011));
+    List<Book> allBooks = bookList();
+    int year = allBooks.get(1).year();
+    List<Book> bookByYear = filterBooksByYear(year);
 
-    Mockito.when(bookService.getBooksByYear(2011)).thenReturn(bookByYear);
+    Mockito.when(bookService.getBooksByYear(year)).thenReturn(bookByYear);
 
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?year=2011"))
+        .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?year=" + year))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(bookByYear.size())))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("The Clean Coder"));
+  }
+
+  private List<Book> bookList() {
+    return List.of(
+        new Book("Clean Code", "Robert Martin", 2008),
+        new Book("The Clean Coder", "Robert Martin", 2011),
+        new Book("Clean Architecture", "Robert Martin", 2017),
+        new Book("Test Driven Development by Example", "Kent Beck", 2003),
+        new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004));
+  }
+
+  private List<Book> filterBooksByYear(int year) {
+    return bookList().stream().filter(book -> book.year() == year).toList();
   }
 }
