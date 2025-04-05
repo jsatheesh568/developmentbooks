@@ -52,6 +52,23 @@ public class BookControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("The Clean Coder"));
   }
 
+
+  @Test
+  void shouldFindBooksByAuthor() throws Exception {
+    String author = "Robert C. Martin";
+    List<Book> booksByAuthor = bookList().stream()
+            .filter(book -> book.author().equals(author))
+            .toList();
+
+    Mockito.when(bookService.getBooksByAuthor(author)).thenReturn(booksByAuthor);
+
+    mockMvc
+            .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Clean Code"));
+  }
+
   private List<Book> bookList() {
     return List.of(
         new Book("Clean Code", "Robert Martin", 2008),

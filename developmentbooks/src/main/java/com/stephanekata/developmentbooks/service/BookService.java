@@ -38,4 +38,8 @@ public class BookService {
                 .filter(book -> book.year() == year)
                 .toList ();
     }
+
+    public List<Book> getBooksByAuthor ( String author ) {
+        return List.of ();
+    }
 }
