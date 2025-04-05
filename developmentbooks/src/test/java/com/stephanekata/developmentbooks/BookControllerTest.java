@@ -87,7 +87,7 @@ public class BookControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
         .andExpect( status().isOk())
-        .andExpect( jsonPath("$", Matchers.hasSize(3))) 
+        .andExpect( jsonPath("$", Matchers.hasSize(3)))
         .andExpect( jsonPath("$[0].title").value("Clean Code"))
         .andExpect( jsonPath("$[1].title").value("The Clean Coder"))
         .andExpect( jsonPath("$[2].title").value("Clean Architecture"));
@@ -132,6 +132,25 @@ public class BookControllerTest {
         .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books").param("year", "abc"))
         .andExpectAll(status().isBadRequest(), jsonPath("$.error").value("Invalid year format"));
   }
+
+  /** Test for fetching when author param is empty. */
+  @Test
+  void shouldReturnBadRequestWhenAuthorParamIsEmpty() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
+                    .param("author", ""))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Author parameter cannot be empty"));
+  }
+
+  /** Test for fetching when year param is empty. */
+  @Test
+  void shouldReturnBadRequestWhenYearParamIsEmpty() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
+                    .param("year", ""))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Year parameter cannot be empty"));
+  }
+
 
   private List<Book> bookList() {
     return List.of(
