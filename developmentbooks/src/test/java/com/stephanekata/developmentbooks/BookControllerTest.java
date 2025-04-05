@@ -3,6 +3,8 @@ package com.stephanekata.developmentbooks;
 import com.stephanekata.developmentbooks.controller.BookController;
 import com.stephanekata.developmentbooks.model.Book;
 import com.stephanekata.developmentbooks.service.BookService;
+
+import java.util.Collections;
 import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -111,7 +113,7 @@ public class BookControllerTest {
   /** Test for fetching when no books are available. */
   @Test
   void shouldReturnEmptyListWhenNoBooksAvailable() throws Exception {
-    Mockito.when(bookService.getAllBooks()).thenReturn(List.of());
+    Mockito.when(bookService.getAllBooks()).thenReturn( Collections.emptyList());
 
     mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books"))
             .andExpect(MockMvcResultMatchers.status().isOk())
