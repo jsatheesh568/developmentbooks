@@ -17,6 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @WebMvcTest(BookController.class)
 @AutoConfigureMockMvc
 public class BookControllerTest {
@@ -34,8 +37,8 @@ public class BookControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books"))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(5)));
+        .andExpect( status().isOk())
+        .andExpect( jsonPath("$", Matchers.hasSize(5)));
   }
 
   /** Test for fetching books by year using query param. */
@@ -49,9 +52,9 @@ public class BookControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?year=" + year))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(bookByYear.size())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("The Clean Coder"));
+        .andExpect( status().isOk())
+        .andExpect( jsonPath("$", Matchers.hasSize(bookByYear.size())))
+        .andExpect( jsonPath("$[0].title").value("The Clean Coder"));
   }
 
   /** Test for fetching books by author using query param. */
@@ -65,10 +68,10 @@ public class BookControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
+        .andExpect( status().isOk())
+        .andExpect( jsonPath("$", Matchers.hasSize(1)))
         .andExpect(
-            MockMvcResultMatchers.jsonPath("$[0].title")
+            jsonPath("$[0].title")
                 .value("Test Driven Development by Example"));
   }
 
@@ -83,13 +86,12 @@ public class BookControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3))) // This will fail
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Clean Code"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("The Clean Coder"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[2].title").value("Clean Architecture"));
+        .andExpect( status().isOk())
+        .andExpect( jsonPath("$", Matchers.hasSize(3))) 
+        .andExpect( jsonPath("$[0].title").value("Clean Code"))
+        .andExpect( jsonPath("$[1].title").value("The Clean Coder"))
+        .andExpect( jsonPath("$[2].title").value("Clean Architecture"));
   }
-
 
   /** Test for fetching the books by author and year using query param. */
   @Test
@@ -98,38 +100,38 @@ public class BookControllerTest {
     String author = sampleBook.author();
     int year = sampleBook.year();
 
-    List<Book> expectedBooks = filterBooksByAuthorAndYear(author,year);
+    List<Book> expectedBooks = filterBooksByAuthorAndYear(author, year);
 
     Mockito.when(bookService.getBooksByAuthorAndYear(author, year)).thenReturn(expectedBooks);
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
-                    .param("author", author)
-                    .param("year", String.valueOf(year)))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("The Clean Coder"));
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get("/api/v1/bookstore/books")
+                .param("author", author)
+                .param("year", String.valueOf(year)))
+        .andExpect( status().isOk())
+        .andExpect( jsonPath("$", Matchers.hasSize(1)))
+        .andExpect( jsonPath("$[0].title").value("The Clean Coder"));
   }
 
   /** Test for fetching when no books are available. */
   @Test
   void shouldReturnEmptyListWhenNoBooksAvailable() throws Exception {
-    Mockito.when(bookService.getAllBooks()).thenReturn( Collections.emptyList());
+    Mockito.when(bookService.getAllBooks()).thenReturn(Collections.emptyList());
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books"))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books"))
+        .andExpect( status().isOk())
+        .andExpect( jsonPath("$", Matchers.hasSize(0)));
   }
 
   /** Test for fetching when book year is invalid. */
   @Test
   void shouldReturnBadRequestForInvalidYearParameter() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
-                    .param("year", "abc"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Invalid year format"));
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books").param("year", "abc"))
+        .andExpectAll(status().isBadRequest(), jsonPath("$.error").value("Invalid year format"));
   }
-
-
 
   private List<Book> bookList() {
     return List.of(
@@ -148,10 +150,9 @@ public class BookControllerTest {
     return bookList().stream().filter(book -> book.author() == author).toList();
   }
 
-private List<Book> filterBooksByAuthorAndYear(String author, int year){
+  private List<Book> filterBooksByAuthorAndYear(String author, int year) {
     return bookList().stream()
-            .filter(book -> book.author().equals(author) && book.year() == year)
-            .toList();
-}
-
+        .filter(book -> book.author().equals(author) && book.year() == year)
+        .toList();
+  }
 }

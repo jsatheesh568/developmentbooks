@@ -33,11 +33,11 @@ public class BookController {
           @RequestParam(required = false) String year) {
 
     if (author != null && year != null) {
-      return ResponseEntity.ok(bookService.getBooksByAuthorAndYear(author, Integer.parseInt(year)));
+      return ResponseEntity.ok(bookService.getBooksByAuthorAndYear(author, parseYear (year)));
     } else if (author != null) {
       return ResponseEntity.ok(bookService.getBooksByAuthor(author));
     } else if (year != null) {
-      return ResponseEntity.ok(bookService.getBooksByYear(Integer.parseInt(year)));
+      return ResponseEntity.ok(bookService.getBooksByYear(parseYear(year)));
     } else {
       return ResponseEntity.ok(bookService.getAllBooks());
     }
@@ -77,5 +77,9 @@ public class BookController {
   @GetMapping(value = "/books", params = {"author", "year"})
   public List<Book> getBooksByAuthorAndYear(@RequestParam String author, @RequestParam int year) {
     return bookService.getBooksByAuthorAndYear(author, year);
+  }
+
+  private int parseYear(String year) {
+    return Integer.parseInt(year);
   }
 }
