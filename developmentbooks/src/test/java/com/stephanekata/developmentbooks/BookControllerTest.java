@@ -120,6 +120,17 @@ public class BookControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
   }
 
+  /** Test for fetching when book year is invalid. */
+  @Test
+  void shouldReturnBadRequestForInvalidYearParameter() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
+                    .param("year", "abc")) // invalid year
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Invalid year format"));
+  }
+
+
+
   private List<Book> bookList() {
     return List.of(
         new Book("Clean Code", "Robert Martin", 2008),
