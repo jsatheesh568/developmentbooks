@@ -56,10 +56,9 @@ public class BookControllerTest {
 
   @Test
   void shouldFindBooksByAuthor() throws Exception {
-    String author = "Kent Beck";
-    List<Book> booksByAuthor = bookList().stream()
-            .filter(book -> book.author().equals(author))
-            .toList();
+    List<Book> allBooks = bookList ();
+    String author = allBooks.get(3).author ();
+    List<Book> booksByAuthor = filterBooksByAuthor(author);
 
     Mockito.when(bookService.getBooksByAuthor(author)).thenReturn(booksByAuthor);
 
@@ -81,5 +80,9 @@ public class BookControllerTest {
 
   private List<Book> filterBooksByYear(int year) {
     return bookList().stream().filter(book -> book.year() == year).toList();
+  }
+
+  private List<Book> filterBooksByAuthor(String author) {
+    return bookList().stream().filter(book -> book.author () == author).toList();
   }
 }
