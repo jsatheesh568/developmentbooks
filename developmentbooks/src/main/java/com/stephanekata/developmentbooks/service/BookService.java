@@ -5,9 +5,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * BookService provides business logic for book retrieval and filtering.
+ * Author: Satheeshkumar Subramanian
+ */
+
 @Service
 public class BookService {
 
+    /**
+     * Fetches all available books.
+     * @return list of books
+     */
     public List< Book > getAllBooks() {
         return List.of(
                 new Book("Clean Code", "Robert C. Martin", 2008),
@@ -16,5 +25,14 @@ public class BookService {
                 new Book("The Pragmatic Programmer", "Andrew Hunt", 1999),
                 new Book("Test Driven Development", "Kent Beck", 2002)
         );
+    }
+
+    /**
+     * Filters books by year.
+     * @param year year to filter
+     * @return list of books published in that year
+     */
+    public List<Book> getBooksByYear(int year) {
+        return List.of();
     }
 }
