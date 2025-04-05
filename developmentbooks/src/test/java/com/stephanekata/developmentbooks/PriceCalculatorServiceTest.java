@@ -33,6 +33,6 @@ class PriceCalculatorServiceTest {
 
     double result = priceCalculatorService.calculateTotalPrice(books);
     
-    assertEquals(100.0, result);
+    assertEquals(150.0, result);
   }
 }
