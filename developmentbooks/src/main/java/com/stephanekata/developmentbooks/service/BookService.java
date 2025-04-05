@@ -44,4 +44,8 @@ public class BookService {
                 .filter(book -> book.author().equals(author))
                 .toList();
     }
+
+    public List<Book> getBooksByAuthorAndYear ( String author , int year ) {
+        return List.of ();
+    }
 }

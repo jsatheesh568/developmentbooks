@@ -88,6 +88,28 @@ public class BookControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$[2].title").value("Clean Architecture"));
   }
 
+
+  /** Test for fetching the books by author and year using query param. */
+  @Test
+  void shouldFindBooksByAuthorAndYear() throws Exception {
+    String author = "Robert Martin";
+    int year = 2011;
+
+    List<Book> expectedBooks = bookList().stream()
+            .filter(book -> book.author().equals(author) && book.year() == year)
+            .toList();
+
+    Mockito.when(bookService.getBooksByAuthorAndYear(author, year)).thenReturn(expectedBooks);
+
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
+                    .param("author", author)
+                    .param("year", String.valueOf(year)))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("The Clean Coder"));
+  }
+
+
   private List<Book> bookList() {
     return List.of(
         new Book("Clean Code", "Robert Martin", 2008),
