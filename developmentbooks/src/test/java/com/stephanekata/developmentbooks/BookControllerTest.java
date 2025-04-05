@@ -69,6 +69,24 @@ public class BookControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Test Driven Development by Example"));
   }
 
+
+  /** Test for fetching the books by same author using query param. */
+  @Test
+  void shouldReturnAllBooksForSameAuthor() throws Exception {
+    String author = "Robert Martin";
+
+    Mockito.when(bookService.getBooksByAuthor(author)).thenReturn(List.of());
+
+    mockMvc
+            .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)))  // This will fail
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Clean Code"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("The Clean Coder"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[2].title").value("Clean Architecture"));
+  }
+
+
   private List<Book> bookList() {
     return List.of(
             new Book("Clean Code", "Robert Martin", 2008),
