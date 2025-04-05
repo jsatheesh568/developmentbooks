@@ -17,17 +17,24 @@ public class PriceCalculatorService {
         if (books == null || books.isEmpty()) {
             return 0.0;
         }
-        long uniqueBooksCount = books.stream()
+
+        double baseTotal = books.size() * BASE_PRICE;
+        double discount = calculateDiscount(books);
+
+        return baseTotal - discount;
+    }
+
+    private double calculateDiscount(List<Book> books) {
+        long uniqueBooks = books.stream()
                 .map(Book::title)
                 .distinct()
                 .count();
 
-        double totalPrice = books.size() * BASE_PRICE;
-
-        if (uniqueBooksCount == 2) {
-            totalPrice *= 0.95;
+        if (uniqueBooks == 2) {
+            return books.size() * BASE_PRICE * 0.05; // 5% discount
         }
 
-        return totalPrice;
+        return 0.0;
     }
+
 }
