@@ -1,70 +1,52 @@
 package com.stephanekata.developmentbooks;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.stephanekata.developmentbooks.model.Book;
 import com.stephanekata.developmentbooks.service.PriceCalculatorService;
-import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class PriceCalculatorServiceTest {
 
-  @Test
-  public void testSingleBookReturnsBasePrice() {
-    PriceCalculatorService priceCalculatorService = new PriceCalculatorService();
-    List<Book> books = List.of(new Book("Clean Code", "Robert Martin", 2008));
+  private PriceCalculatorService priceCalculatorService;
 
-    double result = priceCalculatorService.calculateTotalPrice(books);
+  private final Book cleanCode = new Book("Clean Code", "Robert Martin", 2008);
+  private final Book refactoring = new Book("Refactoring", "Martin Fowler", 1999);
+  private final Book tdd = new Book("TDD", "Kent Beck", 2002);
 
-    assertEquals(50.0, result);
+  @BeforeEach
+  void setUp() {
+    priceCalculatorService = new PriceCalculatorService();
   }
 
   @Test
-  public void testMultipleSameBooksReturnTotalWithoutDiscount() {
-    PriceCalculatorService priceCalculatorService = new PriceCalculatorService();
-
-    List<Book> books = List.of(
-            new Book("Clean Code", "Robert Martin", 2008),
-            new Book("Clean Code", "Robert Martin", 2008),
-            new Book("Clean Code", "Robert Martin", 2008)
-    );
-
+  void shouldReturnBasePriceForSingleBook() {
+    List<Book> books = List.of(cleanCode);
     double result = priceCalculatorService.calculateTotalPrice(books);
-
-    assertEquals(150.0, result);
-  }
-
-
-  @Test
-  public void testTwoDifferentBooksWithFivePercentDiscount() {
-    PriceCalculatorService priceCalculatorService = new PriceCalculatorService();
-
-    List<Book> books = List.of(
-            new Book("Clean Code", "Robert Martin", 2008),
-            new Book("Refactoring", "Martin Fowler", 1999)
-    );
-
-    double result = priceCalculatorService.calculateTotalPrice(books);
-
-    assertEquals(95.0, result);
+    assertEquals(50.0, result, 0.01);
   }
 
   @Test
-  public void testThreeDifferentBooksWithTenPercentDiscount() {
-    PriceCalculatorService priceCalculatorService = new PriceCalculatorService();
-
-    List<Book> books = List.of(
-            new Book("Clean Code", "Robert Martin", 2008),
-            new Book("Refactoring", "Martin Fowler", 1999),
-            new Book("TDD", "Kent Beck", 2002)
-    );
-
+  void shouldReturnTotalWithoutDiscountForSameBooks() {
+    List<Book> books = List.of(cleanCode, cleanCode, cleanCode);
     double result = priceCalculatorService.calculateTotalPrice(books);
-
-    assertEquals(135.0, result);
+    assertEquals(150.0, result, 0.01);
   }
 
+  @Test
+  void shouldApplyFivePercentDiscountForTwoDifferentBooks() {
+    List<Book> books = List.of(cleanCode, refactoring);
+    double result = priceCalculatorService.calculateTotalPrice(books);
+    assertEquals(95.0, result, 0.01);
+  }
 
+  @Test
+  void shouldApplyTenPercentDiscountForThreeDifferentBooks() {
+    List<Book> books = List.of(cleanCode, refactoring, tdd);
+    double result = priceCalculatorService.calculateTotalPrice(books);
+    assertEquals(135.0, result, 0.01);
+  }
 }
