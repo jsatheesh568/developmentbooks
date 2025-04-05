@@ -108,6 +108,15 @@ public class BookControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("The Clean Coder"));
   }
 
+  /** Test for fetching when no books are available. */
+  @Test
+  void shouldReturnEmptyListWhenNoBooksAvailable() throws Exception {
+    Mockito.when(bookService.getAllBooks()).thenReturn(List.of());
+
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+  }
 
   private List<Book> bookList() {
     return List.of(
