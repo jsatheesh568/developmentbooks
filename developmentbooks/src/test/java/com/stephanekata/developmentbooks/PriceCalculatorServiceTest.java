@@ -22,19 +22,20 @@ class PriceCalculatorServiceTest {
   }
 
   @Test
-  public void testMultipleBooksReturnTotalWithoutDiscount() {
+  public void testMultipleSameBooksReturnTotalWithoutDiscount() {
     PriceCalculatorService priceCalculatorService = new PriceCalculatorService();
 
     List<Book> books = List.of(
             new Book("Clean Code", "Robert Martin", 2008),
-            new Book("Refactoring", "Martin Fowler", 1999),
-            new Book("TDD", "Kent Beck", 2002)
+            new Book("Clean Code", "Robert Martin", 2008),
+            new Book("Clean Code", "Robert Martin", 2008)
     );
 
     double result = priceCalculatorService.calculateTotalPrice(books);
-    
+
     assertEquals(150.0, result);
   }
+
 
   @Test
   public void testTwoDifferentBooksWithFivePercentDiscount() {
@@ -61,7 +62,7 @@ class PriceCalculatorServiceTest {
     );
 
     double result = priceCalculatorService.calculateTotalPrice(books);
-    
+
     assertEquals(135.0, result);
   }
 
