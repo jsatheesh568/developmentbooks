@@ -17,17 +17,17 @@ public class PriceCalculatorService {
         if (books == null || books.isEmpty()) {
             return 0.0;
         }
+        long uniqueBooksCount = books.stream()
+                .map(Book::title)
+                .distinct()
+                .count();
 
-        return books.stream()
-                .mapToDouble(this::getBasePriceForBook)
-                .sum();
-    }
+        double totalPrice = books.size() * BASE_PRICE;
 
-    /**
-     * Gets the price for a single book.
-     * Future logic like discounts per title can be applied here.
-     */
-    private double getBasePriceForBook(Book book) {
-        return BASE_PRICE;
+        if (uniqueBooksCount == 2) {
+            totalPrice *= 0.95;
+        }
+
+        return totalPrice;
     }
 }
