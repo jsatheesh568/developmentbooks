@@ -15,52 +15,68 @@ import java.util.stream.Collectors;
 public class BookService {
 
   /**
-   * Fetches all available books.
+   * Returns a list of all books available in the system.
    *
-   * @return list of books
+   * @return a list of hardcoded Book objects.
    */
   public List<Book> getAllBooks() {
     return List.of(
-        new Book("Clean Code", "Robert Martin", 2008),
-        new Book("The Clean Coder", "Robert Martin", 2011),
-        new Book("Clean Architecture", "Robert Martin", 2017),
-        new Book("Test Driven Development by Example", "Kent Beck", 2003),
-        new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004));
+            new Book("Clean Code", "Robert Martin", 2008),
+            new Book("The Clean Coder", "Robert Martin", 2011),
+            new Book("Clean Architecture", "Robert Martin", 2017),
+            new Book("Test Driven Development by Example", "Kent Beck", 2003),
+            new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004));
   }
 
   /**
-   * Filters books by year.
+   * Filters and returns books published in the specified year.
    *
-   * @param year year to filter
-   * @return list of books published in that year
+   * @param year the year to filter books by
+   * @return a list of books published in the given year
    */
   public List<Book> getBooksByYear(int year) {
-    return getAllBooks().stream().filter(book -> book.year() == year).toList();
+    return filterBooks(book -> book.year() == year);
   }
 
-    /**
-     * Filters books by year.
-     *
-     * @param author author to filter
-     * @return list of books published in that author
-     */
+  /**
+   * Filters and returns books written by the specified author.
+   *
+   * @param author the name of the author
+   * @return a list of books written by the given author
+   */
   public List<Book> getBooksByAuthor(String author) {
-    return getAllBooks().stream().filter(book -> book.author().equals(author)).toList();
+    return filterBooks(book -> book.author().equals(author));
   }
 
-    /**
-     * Filters books by year & author.
-     *
-     * @param year,author year and author  to filter
-     * @return list of books published in that year & author
-     */
-    private Predicate <Book> matchesAuthorAndYear( String author, int year) {
-      return book -> book.author().equals(author) && book.year() == year;
-    }
-
+  /**
+   * Filters and returns books written by the specified author and published in the specified year.
+   *
+   * @param author the name of the author
+   * @param year the year of publication
+   * @return a list of books that match both author and year
+   */
   public List<Book> getBooksByAuthorAndYear(String author, int year) {
-    return getAllBooks().stream()
-            .filter(matchesAuthorAndYear(author, year))
-            .toList();
+    return filterBooks(matchesAuthorAndYear(author, year));
+  }
+
+  /**
+   * Creates a reusable predicate that checks if a book matches both a given author and publication year.
+   *
+   * @param author the author's name
+   * @param year the year of publication
+   * @return a Predicate<Book> for filtering
+   */
+  private Predicate<Book> matchesAuthorAndYear(String author, int year) {
+    return book -> book.author().equals(author) && book.year() == year;
+  }
+
+  /**
+   * Filters the list of all books using a given predicate condition.
+   *
+   * @param predicate the filtering logic as a Predicate<Book>
+   * @return a filtered list of books that satisfy the predicate
+   */
+  private List<Book> filterBooks(Predicate<Book> predicate) {
+    return getAllBooks().stream().filter(predicate).toList();
   }
 }
