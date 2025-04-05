@@ -4,6 +4,7 @@ import com.stephanekata.developmentbooks.model.Book;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * BookService provides business logic for book retrieval and filtering.
@@ -33,6 +34,8 @@ public class BookService {
      * @return list of books published in that year
      */
     public List<Book> getBooksByYear(int year) {
-        return List.of();
+        return getAllBooks().stream()
+                .filter(book -> book.year() == year)
+                .collect( Collectors.toList());
     }
 }

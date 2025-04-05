@@ -45,6 +45,9 @@ public class BookControllerTest {
   /** Test for fetching books by year using query param. */
   @Test
   void shouldFindBooksByYear() throws Exception {
+    List<Book> bookByYear = List.of(new Book("The Clean Coder", "Robert Martin", 2011));
+
+    Mockito.when(bookService.getBooksByYear(2011)).thenReturn(bookByYear);
 
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?year=2011"))
