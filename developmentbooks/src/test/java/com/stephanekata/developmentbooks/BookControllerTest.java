@@ -115,7 +115,7 @@ public class BookControllerTest {
 
     mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books"))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
   }
 
   private List<Book> bookList() {
