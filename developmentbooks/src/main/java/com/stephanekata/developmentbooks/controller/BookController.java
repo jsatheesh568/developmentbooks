@@ -2,12 +2,14 @@ package com.stephanekata.developmentbooks.controller;
 
 import com.stephanekata.developmentbooks.model.Book;
 import com.stephanekata.developmentbooks.service.BookService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /** BookController handles REST endpoints for book operations. Author: Satheeshkumar Subramanian */
 @RestController
@@ -26,9 +28,22 @@ public class BookController {
    * @return List of books
    */
   @GetMapping("/books")
-  public List<Book> getAllBooks() {
-    return bookService.getAllBooks();
+  public ResponseEntity<List<Book>> getBooks(
+          @RequestParam(required = false) String author,
+          @RequestParam(required = false) String year) {
+
+    if (author != null && year != null) {
+      return ResponseEntity.ok(bookService.getBooksByAuthorAndYear(author, Integer.parseInt(year)));
+    } else if (author != null) {
+      return ResponseEntity.ok(bookService.getBooksByAuthor(author));
+    } else if (year != null) {
+      return ResponseEntity.ok(bookService.getBooksByYear(Integer.parseInt(year)));
+    } else {
+      return ResponseEntity.ok(bookService.getAllBooks());
+    }
   }
+
+
 
   /**
    * Returns books published in a specific year.

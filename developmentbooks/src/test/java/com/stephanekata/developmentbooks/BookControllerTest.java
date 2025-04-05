@@ -124,7 +124,7 @@ public class BookControllerTest {
   @Test
   void shouldReturnBadRequestForInvalidYearParameter() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
-                    .param("year", "abc")) // invalid year
+                    .param("year", "abc"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Invalid year format"));
   }
