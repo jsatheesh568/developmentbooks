@@ -4,6 +4,7 @@ import com.stephanekata.developmentbooks.model.Book;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -53,9 +54,13 @@ public class BookService {
      * @param year,author year and author  to filter
      * @return list of books published in that year & author
      */
+    private Predicate <Book> matchesAuthorAndYear( String author, int year) {
+      return book -> book.author().equals(author) && book.year() == year;
+    }
+
   public List<Book> getBooksByAuthorAndYear(String author, int year) {
     return getAllBooks().stream()
-        .filter(book -> book.author().equals(author) && book.year() == year)
-        .toList();
+            .filter(matchesAuthorAndYear(author, year))
+            .toList();
   }
 }

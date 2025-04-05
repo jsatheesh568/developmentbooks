@@ -92,12 +92,11 @@ public class BookControllerTest {
   /** Test for fetching the books by author and year using query param. */
   @Test
   void shouldFindBooksByAuthorAndYear() throws Exception {
-    String author = "Robert Martin";
-    int year = 2011;
+    Book sampleBook = bookList().get(1);
+    String author = sampleBook.author();
+    int year = sampleBook.year();
 
-    List<Book> expectedBooks = bookList().stream()
-            .filter(book -> book.author().equals(author) && book.year() == year)
-            .toList();
+    List<Book> expectedBooks = filterBooksByAuthorAndYear(author,year);
 
     Mockito.when(bookService.getBooksByAuthorAndYear(author, year)).thenReturn(expectedBooks);
 
@@ -126,4 +125,11 @@ public class BookControllerTest {
   private List<Book> filterBooksByAuthor(String author) {
     return bookList().stream().filter(book -> book.author() == author).toList();
   }
+
+private List<Book> filterBooksByAuthorAndYear(String author, int year){
+    return bookList().stream()
+            .filter(book -> book.author().equals(author) && book.year() == year)
+            .toList();
+}
+
 }
