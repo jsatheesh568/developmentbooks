@@ -16,7 +16,7 @@ public class PriceCalculatorController {
 
   private final PriceCalculatorService priceCalculatorService;
 
-  public PriceCalculatorController( PriceCalculatorService priceCalculatorService ) {
+  public PriceCalculatorController(PriceCalculatorService priceCalculatorService) {
     this.priceCalculatorService = priceCalculatorService;
   }
 
