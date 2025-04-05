@@ -20,11 +20,11 @@ public class BookService {
      */
     public List< Book > getAllBooks() {
         return List.of(
-                new Book("Clean Code", "Robert C. Martin", 2008),
-                new Book("Effective Java", "Joshua Bloch", 2018),
-                new Book("Refactoring", "Martin Fowler", 1999),
-                new Book("The Pragmatic Programmer", "Andrew Hunt", 1999),
-                new Book("Test Driven Development", "Kent Beck", 2002)
+                new Book("Clean Code", "Robert Martin", 2008),
+                new Book("The Clean Coder", "Robert Martin", 2011),
+                new Book("Clean Architecture", "Robert Martin", 2017),
+                new Book("Test Driven Development by Example", "Kent Beck", 2003),
+                new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004)
         );
     }
 
@@ -40,6 +40,8 @@ public class BookService {
     }
 
     public List<Book> getBooksByAuthor ( String author ) {
-        return List.of ();
+        return getAllBooks().stream()
+                .filter(book -> book.author().equals(author))
+                .toList();
     }
 }

@@ -52,10 +52,11 @@ public class BookControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("The Clean Coder"));
   }
 
+  /** Test for fetching books by author using query param. */
 
   @Test
   void shouldFindBooksByAuthor() throws Exception {
-    String author = "Robert C. Martin";
+    String author = "Kent Beck";
     List<Book> booksByAuthor = bookList().stream()
             .filter(book -> book.author().equals(author))
             .toList();
@@ -66,16 +67,16 @@ public class BookControllerTest {
             .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Clean Code"));
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Test Driven Development by Example"));
   }
 
   private List<Book> bookList() {
     return List.of(
-        new Book("Clean Code", "Robert Martin", 2008),
-        new Book("The Clean Coder", "Robert Martin", 2011),
-        new Book("Clean Architecture", "Robert Martin", 2017),
-        new Book("Test Driven Development by Example", "Kent Beck", 2003),
-        new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004));
+            new Book("Clean Code", "Robert Martin", 2008),
+            new Book("The Clean Coder", "Robert Martin", 2011),
+            new Book("Clean Architecture", "Robert Martin", 2017),
+            new Book("Test Driven Development by Example", "Kent Beck", 2003),
+            new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004));
   }
 
   private List<Book> filterBooksByYear(int year) {
