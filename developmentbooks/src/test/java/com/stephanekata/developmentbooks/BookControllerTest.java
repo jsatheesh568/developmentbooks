@@ -53,47 +53,48 @@ public class BookControllerTest {
   }
 
   /** Test for fetching books by author using query param. */
-
   @Test
   void shouldFindBooksByAuthor() throws Exception {
-    List<Book> allBooks = bookList ();
-    String author = allBooks.get(3).author ();
+    List<Book> allBooks = bookList();
+    String author = allBooks.get(3).author();
     List<Book> booksByAuthor = filterBooksByAuthor(author);
 
     Mockito.when(bookService.getBooksByAuthor(author)).thenReturn(booksByAuthor);
 
     mockMvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Test Driven Development by Example"));
+        .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].title")
+                .value("Test Driven Development by Example"));
   }
-
 
   /** Test for fetching the books by same author using query param. */
   @Test
   void shouldReturnAllBooksForSameAuthor() throws Exception {
     String author = "Robert Martin";
 
-    Mockito.when(bookService.getBooksByAuthor(author)).thenReturn(List.of());
+    List<Book> bookBySameAuthor = filterBooksByAuthor(author);
+
+    Mockito.when(bookService.getBooksByAuthor(author)).thenReturn(bookBySameAuthor);
 
     mockMvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)))  // This will fail
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Clean Code"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("The Clean Coder"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[2].title").value("Clean Architecture"));
+        .perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books?author=" + author))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3))) // This will fail
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Clean Code"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("The Clean Coder"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[2].title").value("Clean Architecture"));
   }
-
 
   private List<Book> bookList() {
     return List.of(
-            new Book("Clean Code", "Robert Martin", 2008),
-            new Book("The Clean Coder", "Robert Martin", 2011),
-            new Book("Clean Architecture", "Robert Martin", 2017),
-            new Book("Test Driven Development by Example", "Kent Beck", 2003),
-            new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004));
+        new Book("Clean Code", "Robert Martin", 2008),
+        new Book("The Clean Coder", "Robert Martin", 2011),
+        new Book("Clean Architecture", "Robert Martin", 2017),
+        new Book("Test Driven Development by Example", "Kent Beck", 2003),
+        new Book("Working Effectively With Legacy Code", "Michael C. Feathers", 2004));
   }
 
   private List<Book> filterBooksByYear(int year) {
@@ -101,6 +102,6 @@ public class BookControllerTest {
   }
 
   private List<Book> filterBooksByAuthor(String author) {
-    return bookList().stream().filter(book -> book.author () == author).toList();
+    return bookList().stream().filter(book -> book.author() == author).toList();
   }
 }
