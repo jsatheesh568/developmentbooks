@@ -1,6 +1,7 @@
 package com.stephanekata.developmentbooks;
 
 import com.stephanekata.developmentbooks.controller.BookController;
+import com.stephanekata.developmentbooks.exception.GlobalExceptionHandler;
 import com.stephanekata.developmentbooks.model.Book;
 import com.stephanekata.developmentbooks.service.BookService;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BookController.class)
 @AutoConfigureMockMvc
+@Import ( GlobalExceptionHandler.class)
 public class BookControllerTest {
 
   @Autowired private MockMvc mockMvc;
@@ -138,17 +141,17 @@ public class BookControllerTest {
   void shouldReturnBadRequestWhenAuthorParamIsEmpty() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
                     .param("author", ""))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Author parameter cannot be empty"));
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("Author parameter cannot be empty"));
   }
-
   /** Test for fetching when year param is empty. */
+
   @Test
   void shouldReturnBadRequestWhenYearParamIsEmpty() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bookstore/books")
                     .param("year", ""))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Year parameter cannot be empty"));
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("Year parameter cannot be empty"));
   }
 
 

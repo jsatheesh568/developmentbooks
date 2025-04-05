@@ -3,15 +3,15 @@ package com.stephanekata.developmentbooks.controller;
 import com.stephanekata.developmentbooks.model.Book;
 import com.stephanekata.developmentbooks.service.BookService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
-/** BookController handles REST endpoints for book operations. Author: Satheeshkumar Subramanian */
+/**
+ * BookController handles REST endpoints for book operations.
+ *
+ * Author: Satheeshkumar Subramanian
+ */
 @RestController
 @RequestMapping("/api/v1/bookstore")
 public class BookController {
@@ -23,63 +23,40 @@ public class BookController {
   }
 
   /**
-   * Returns all available books.
+   * Returns books filtered by optional query parameters `author` and/or `year`.
+   * - If both are null, returns all books.
+   * - If author is present but empty, returns 400.
+   * - If year is present but empty or non-numeric, returns 400.
    *
-   * @return List of books
+   * @param author optional filter by author
+   * @param year   optional filter by publication year
+   * @return filtered list of books
    */
   @GetMapping("/books")
   public ResponseEntity<List<Book>> getBooks(
           @RequestParam(required = false) String author,
           @RequestParam(required = false) String year) {
 
+    if (author != null && author.isBlank()) {
+      throw new IllegalArgumentException("Author parameter cannot be empty");
+    }
+
+    if (year != null && year.isBlank()) {
+      throw new IllegalArgumentException("Year parameter cannot be empty");
+    }
+
+    if (year != null && !year.matches("\\d+")) {
+      throw new IllegalArgumentException("Invalid year format");
+    }
+
     if (author != null && year != null) {
-      return ResponseEntity.ok(bookService.getBooksByAuthorAndYear(author, parseYear (year)));
+      return ResponseEntity.ok(bookService.getBooksByAuthorAndYear(author, Integer.parseInt(year)));
     } else if (author != null) {
       return ResponseEntity.ok(bookService.getBooksByAuthor(author));
     } else if (year != null) {
-      return ResponseEntity.ok(bookService.getBooksByYear(parseYear(year)));
+      return ResponseEntity.ok(bookService.getBooksByYear(Integer.parseInt(year)));
     } else {
       return ResponseEntity.ok(bookService.getAllBooks());
     }
-  }
-
-
-
-  /**
-   * Returns books published in a specific year.
-   *
-   * @param year publication year
-   * @return filtered list of books
-   */
-  @GetMapping(value = "/books", params = "year")
-  public List<Book> getBooksByYear(@RequestParam int year) {
-    return bookService.getBooksByYear(year);
-  }
-
-  /**
-   * Returns books published in a specific year.
-   *
-   * @param author publication author
-   * @return filtered list of books
-   */
-  @GetMapping(value = "/books", params = "author")
-  public List<Book> getBooksByAuthor(@RequestParam String author) {
-    return bookService.getBooksByAuthor(author);
-  }
-
-  /**
-   * Returns books published in a specific year & author.
-   *
-   * @param author , year publication author, year
-   * @return filtered list of books
-   */
-
-  @GetMapping(value = "/books", params = {"author", "year"})
-  public List<Book> getBooksByAuthorAndYear(@RequestParam String author, @RequestParam int year) {
-    return bookService.getBooksByAuthorAndYear(author, year);
-  }
-
-  private int parseYear(String year) {
-    return Integer.parseInt(year);
   }
 }
