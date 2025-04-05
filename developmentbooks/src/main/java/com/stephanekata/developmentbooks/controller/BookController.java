@@ -51,4 +51,16 @@ public class BookController {
   public List<Book> getBooksByAuthor(@RequestParam String author) {
     return bookService.getBooksByAuthor(author);
   }
+
+  /**
+   * Returns books published in a specific year & author.
+   *
+   * @param author , year publication author, year
+   * @return filtered list of books
+   */
+
+  @GetMapping(value = "/books", params = {"author", "year"})
+  public List<Book> getBooksByAuthorAndYear(@RequestParam String author, @RequestParam int year) {
+    return bookService.getBooksByAuthorAndYear(author, year);
+  }
 }
