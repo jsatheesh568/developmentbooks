@@ -35,4 +35,19 @@ class PriceCalculatorServiceTest {
     
     assertEquals(150.0, result);
   }
+
+  @Test
+  public void testTwoDifferentBooksWithFivePercentDiscount() {
+    PriceCalculatorService priceCalculatorService = new PriceCalculatorService();
+
+    List<Book> books = List.of(
+            new Book("Clean Code", "Robert Martin", 2008),
+            new Book("Refactoring", "Martin Fowler", 1999)
+    );
+
+    double result = priceCalculatorService.calculateTotalPrice(books);
+
+    assertEquals(95.0, result);
+  }
+
 }
