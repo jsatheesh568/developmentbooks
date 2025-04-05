@@ -19,7 +19,7 @@ public class PriceCalculatorService {
         }
 
         return books.stream()
-                .mapToDouble(this::getPriceForBook)
+                .mapToDouble(this::getBasePriceForBook)
                 .sum();
     }
 
@@ -27,7 +27,7 @@ public class PriceCalculatorService {
      * Gets the price for a single book.
      * Future logic like discounts per title can be applied here.
      */
-    private double getPriceForBook(Book book) {
+    private double getBasePriceForBook(Book book) {
         return BASE_PRICE;
     }
 }
