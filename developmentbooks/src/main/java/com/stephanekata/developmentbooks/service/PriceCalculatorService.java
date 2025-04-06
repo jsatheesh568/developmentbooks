@@ -7,6 +7,7 @@ import com.stephanekata.developmentbooks.utils.PriceCalculator;
 import com.stephanekata.developmentbooks.discount.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PriceCalculatorService {
@@ -14,13 +15,7 @@ public class PriceCalculatorService {
     private final DiscountApplier discountApplier;
 
     public PriceCalculatorService() {
-    this.discountApplier =
-        new DiscountApplier(
-            Arrays.asList(
-                new TwoBookDiscountStrategy(),
-                new ThreeBookDiscountStrategy(),
-                new FourBookDiscountStrategy(),
-                new FiveBookDiscountStrategy()));
+        this.discountApplier = new DiscountApplier(DiscountStrategyFactory.getOrderedStrategies());
     }
 
     public PriceCalculatorService(DiscountApplier discountApplier) {
@@ -28,19 +23,17 @@ public class PriceCalculatorService {
     }
 
     public double calculateTotalPrice(List<Book> books) {
-        if (books == null || books.isEmpty()) {
-            return 0.0;
-        }
+        List<Book> safeBooks = books == null ? Collections.emptyList() : books;
+        if (safeBooks.isEmpty()) return 0.0;
 
-        List<List<Book>> groupedBooks = BookGrouper.groupBooks(books);
-        double total = 0.0;
+        return BookGrouper.groupBooks(safeBooks).stream()
+                .mapToDouble(this::calculateDiscountedPriceForGroup)
+                .sum();
+    }
 
-        for (List<Book> group : groupedBooks) {
-            double basePrice = PriceCalculator.calculateBasePrice(group.size());
-            double discount = discountApplier.applyDiscount(group, basePrice);
-            total += (basePrice - discount);
-        }
-
-        return total;
+    private double calculateDiscountedPriceForGroup(List<Book> group) {
+        double basePrice = PriceCalculator.calculateBasePrice(group.size());
+        double discount = discountApplier.applyDiscount(group, basePrice);
+        return basePrice - discount;
     }
 }
