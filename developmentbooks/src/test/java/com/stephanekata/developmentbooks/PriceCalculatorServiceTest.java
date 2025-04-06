@@ -5,6 +5,7 @@ import com.stephanekata.developmentbooks.service.PriceCalculatorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -71,7 +72,10 @@ class PriceCalculatorServiceTest {
 
   @Test
   void shouldHandleNullBookInList() {
-    List<Book> books = List.of(cleanCode, null, cleanCoder);
+    List<Book> books = new ArrayList <> ();
+    books.add(cleanCode);
+    books.add(null);
+    books.add(cleanCoder);
     double result = priceCalculatorService.calculateTotalPrice(books);
     assertEquals(95.0, result, 0.01);
   }

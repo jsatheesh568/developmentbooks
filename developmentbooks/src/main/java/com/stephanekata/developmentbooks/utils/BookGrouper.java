@@ -20,9 +20,12 @@ public class BookGrouper {
 
     private static Map<String, Integer> countBooksByTitle(List<Book> books) {
         Map<String, Integer> titleCountMap = new HashMap<>();
+
         for (Book book : books) {
+            if (book == null || book.title() == null || book.title().isBlank()) continue;
             titleCountMap.merge(book.title(), 1, Integer::sum);
         }
+
         return titleCountMap;
     }
 
