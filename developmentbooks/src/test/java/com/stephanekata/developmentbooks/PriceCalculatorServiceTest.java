@@ -58,4 +58,13 @@ class PriceCalculatorServiceTest {
     double result = priceCalculatorService.calculateTotalPrice(books);
     assertEquals(160.0, result, 0.01);
   }
+
+  @Test
+  void shouldApplyTwentyFivePercentDiscountForFiveDifferentBooks() {
+    Book book5 = new Book("Clean Architecture", "Robert Martin", 2017);
+    List<Book> books = List.of(cleanCode, refactoring, tdd, cleanCoder, book5);
+    double result = priceCalculatorService.calculateTotalPrice(books);
+    assertEquals(187.5, result, 0.01); 
+  }
+
 }
