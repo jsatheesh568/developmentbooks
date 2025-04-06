@@ -16,7 +16,11 @@ public class PriceCalculatorService {
     public PriceCalculatorService() {
     this.discountApplier =
         new DiscountApplier(
-            Arrays.asList(new TwoBookDiscountStrategy(), new ThreeBookDiscountStrategy(),new FourBookDiscountStrategy()));
+            Arrays.asList(
+                new TwoBookDiscountStrategy(),
+                new ThreeBookDiscountStrategy(),
+                new FourBookDiscountStrategy(),
+                new FiveBookDiscountStrategy()));
     }
 
     public PriceCalculatorService(DiscountApplier discountApplier) {

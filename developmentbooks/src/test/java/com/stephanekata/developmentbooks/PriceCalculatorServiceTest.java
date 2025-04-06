@@ -64,7 +64,7 @@ class PriceCalculatorServiceTest {
     Book book5 = new Book("Clean Architecture", "Robert Martin", 2017);
     List<Book> books = List.of(cleanCode, refactoring, tdd, cleanCoder, book5);
     double result = priceCalculatorService.calculateTotalPrice(books);
-    assertEquals(187.5, result, 0.01); 
+    assertEquals(187.5, result, 0.01);
   }
 
 }
