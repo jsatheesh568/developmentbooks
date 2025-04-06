@@ -19,7 +19,8 @@ class PriceCalculatorServiceTest {
   private final Book CleanArchitecture = new Book("Clean Architecture", "Robert Martin", 2017);
   private final Book tdd = new Book("TDD", "Kent Beck", 2003);
 
-  private final Book legacyCode = new Book("Work Effectively with legacy code","Michael C.Feathers",2004);
+  private final Book legacyCode =
+      new Book("Work Effectively with legacy code", "Michael C.Feathers", 2004);
 
   @BeforeEach
   void setUp() {
@@ -68,4 +69,10 @@ class PriceCalculatorServiceTest {
     assertEquals(187.5, result, 0.01);
   }
 
+  @Test
+  void shouldHandleNullBookInList() {
+    List<Book> books = List.of(cleanCode, null, cleanCoder);
+    double result = priceCalculatorService.calculateTotalPrice(books);
+    assertEquals(95.0, result, 0.01);
+  }
 }
