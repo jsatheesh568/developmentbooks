@@ -14,6 +14,8 @@ class PriceCalculatorServiceTest {
   private PriceCalculatorService priceCalculatorService;
 
   private final Book cleanCode = new Book("Clean Code", "Robert Martin", 2008);
+
+  private final Book cleanCoder = new Book("The Clean Coder", "Robert Martin", 2011);
   private final Book refactoring = new Book("Refactoring", "Martin Fowler", 1999);
   private final Book tdd = new Book("TDD", "Kent Beck", 2002);
 
@@ -52,11 +54,8 @@ class PriceCalculatorServiceTest {
 
   @Test
   void shouldApplyTwentyPercentDiscountForFourDifferentBooks() {
-    Book book4 = new Book("Patterns of Enterprise Application Architecture", "Martin Fowler", 2002);
-    List<Book> books = List.of(cleanCode, refactoring, tdd, book4);
-
+    List<Book> books = List.of(cleanCode, refactoring, tdd, cleanCoder);
     double result = priceCalculatorService.calculateTotalPrice(books);
-
     assertEquals(160.0, result, 0.01);
   }
 }
