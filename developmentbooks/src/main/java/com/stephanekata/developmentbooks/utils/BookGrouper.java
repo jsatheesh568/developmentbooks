@@ -21,12 +21,15 @@ public class BookGrouper {
     private static Map<String, Integer> countBooksByTitle(List<Book> books) {
         Map<String, Integer> titleCountMap = new HashMap<>();
 
-        for (Book book : books) {
-            if (book == null || book.title() == null || book.title().isBlank()) continue;
-            titleCountMap.merge(book.title(), 1, Integer::sum);
-        }
+        books.stream()
+                .filter(BookGrouper::isValidBook)
+                .forEach(book -> titleCountMap.merge(book.title(), 1, Integer::sum));
 
         return titleCountMap;
+    }
+
+    private static boolean isValidBook(Book book) {
+        return book != null && book.title() != null && !book.title().isBlank();
     }
 
     private static List<Book> createGroupFromRemainingBooks(Map<String, Integer> titleCountMap) {
