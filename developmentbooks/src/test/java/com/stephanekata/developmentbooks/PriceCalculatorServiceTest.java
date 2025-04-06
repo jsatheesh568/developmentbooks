@@ -49,4 +49,14 @@ class PriceCalculatorServiceTest {
     double result = priceCalculatorService.calculateTotalPrice(books);
     assertEquals(135.0, result, 0.01);
   }
+
+  @Test
+  void shouldApplyTwentyPercentDiscountForFourDifferentBooks() {
+    Book book4 = new Book("Patterns of Enterprise Application Architecture", "Martin Fowler", 2002);
+    List<Book> books = List.of(cleanCode, refactoring, tdd, book4);
+
+    double result = priceCalculatorService.calculateTotalPrice(books);
+
+    assertEquals(160.0, result, 0.01);
+  }
 }

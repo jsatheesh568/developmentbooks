@@ -19,7 +19,6 @@ public class PriceCalculatorService {
             Arrays.asList(new TwoBookDiscountStrategy(), new ThreeBookDiscountStrategy()));
     }
 
-    // For future use with Spring/DI
     public PriceCalculatorService(DiscountApplier discountApplier) {
         this.discountApplier = discountApplier;
     }
