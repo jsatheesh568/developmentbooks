@@ -79,4 +79,18 @@ class PriceCalculatorServiceTest {
     double result = priceCalculatorService.calculateTotalPrice(books);
     assertEquals(95.0, result, 0.01);
   }
+
+  @Test
+  void shouldGroupBooksForMaximumDiscount() {
+    List<Book> books = List.of(
+            cleanCode, cleanCode,
+            cleanCoder, cleanCoder,
+            CleanArchitecture, CleanArchitecture,
+            tdd,
+            legacyCode
+    );
+    double result = priceCalculatorService.calculateTotalPrice(books);
+    assertEquals(320.0, result, 0.01);
+  }
+
 }
