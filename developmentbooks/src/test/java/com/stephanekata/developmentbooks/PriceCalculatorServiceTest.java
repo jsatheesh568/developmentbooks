@@ -1,14 +1,13 @@
 package com.stephanekata.developmentbooks;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.stephanekata.developmentbooks.model.Book;
 import com.stephanekata.developmentbooks.service.PriceCalculatorService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class PriceCalculatorServiceTest {
 
@@ -72,7 +71,7 @@ class PriceCalculatorServiceTest {
 
   @Test
   void shouldHandleNullBookInList() {
-    List<Book> books = new ArrayList <> ();
+    List<Book> books = new ArrayList<>();
     books.add(cleanCode);
     books.add(null);
     books.add(cleanCoder);
@@ -82,15 +81,17 @@ class PriceCalculatorServiceTest {
 
   @Test
   void shouldGroupBooksForMaximumDiscount() {
-    List<Book> books = List.of(
-            cleanCode, cleanCode,
-            cleanCoder, cleanCoder,
-            CleanArchitecture, CleanArchitecture,
+    List<Book> books =
+        List.of(
+            cleanCode,
+            cleanCode,
+            cleanCoder,
+            cleanCoder,
+            CleanArchitecture,
+            CleanArchitecture,
             tdd,
-            legacyCode
-    );
+            legacyCode);
     double result = priceCalculatorService.calculateTotalPrice(books);
     assertEquals(320.0, result, 0.01);
   }
-
 }
